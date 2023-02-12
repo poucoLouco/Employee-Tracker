@@ -66,57 +66,65 @@ const startQuestions = () => {
       }
     });
 };
-// add a role questions
-function addRole() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "title",
-        message: "What is the name of the role?",
-      },
-      {
-        type: "input",
-        name: "salary",
-        message: "What is the salary of the role?",
-      },
-      {
-        type: "input",
-        name: "department",
-        message: "Which department does the role belong to? ",
-      },
-    ])
-    .then((answers) => {
-      connection.query(
-        `INSERT INTO roles (title, salary, department_id)
-        VALUES (?, ?, ?)`,
-        [answers.title, answers.salary, answers.department],
-        (err) => {
-          if (err) throw err;
-          console.log("added new role");
-          console.table(answers);
-          startQuestions();
-        }
-      );
-    });
-}
-// }
-//   .then((answers) => {
-//   connection.query(`INSERT INTO departments (name)
-//   VALUES (?)`,
-// {
-//   name: answers
-//     },
-//     (err) => {
-//       if (err) throw err;
-//       console.log("added new department");
-//       console.table(answers);
-//       startQuestions();
-//     }
-//   );
-// });
 
-/////
+// view all departments
+const allDepartments = () => {
+  const query = `SELECT *
+   FROM departments`;
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.log("View all departments");
+    console.table(res);
+    startQuestions();
+  });
+};
+
+//  function to view all roles
+const allRoles = () => {
+  const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id;`;
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.log("View all roles");
+    console.table(res);
+    res.forEach((role) => {
+      employeeRoles.push(role.title);
+    });
+    startQuestions();
+  });
+};
+ 
+//  view all employees
+const allEmployees = () => {
+  const sql = `SELECT * FROM employees
+  `;
+  db.query(sql, (err, res) => {
+    if (err) throw err;
+    console.log("View all employees");
+    console.table(res);
+    res.forEach((employee) => {
+      employees.push(employee.first_name);
+    });
+    startQuestions();
+  });
+};
+// 
+// function view all employees
+// const allEmployees = () =>{
+//   const query = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.name, roles.salary, CONCAT(manager.first_name,'', manager.last_name) AS manager
+//   FROM employee 
+//   LEFT JOIN employee manager ON manager.id = employee.manager_id
+//   INNER JOIN roles ON employee.role_id = roles.id
+//   INNER JOIN departments ON departments.id = roles.department_id;`
+//   console.log(query)
+//   connection.query(query, (err, res) =>{
+//     if (err) throw err
+//     console.log("View all employees")
+//     console.table(res)
+//     startQuestions();
+//   }
+// )};
+
+// add a department
 function addDepartment() {
   inquirer
     .prompt([
@@ -140,17 +148,40 @@ function addDepartment() {
     });
 }
 
-////
-// const sql = `SELECT * FROM employee`;
-// db.query(query, (err, res) =>{
-//   if (err) throw err
-//   console.log("View all employees")
-//   console.table(res)
-//   startQuestions();
-// })
-// startQuestions()
-// };
-
+// add a role 
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary of the role?",
+      },
+      {
+        type: "input",
+        name: "department",
+        message: "Which department does the role belong to? ",
+      },
+    ])
+    .then((answers) => {
+      connection.query(
+        `INSERT INTO roles (title, salary, department_id) 
+        VALUES (?, ?, ?)`,
+        [answers.title, answers.salary, answers.department],
+        (err) => {
+          if (err) throw err;
+          console.log("added new role");
+          console.table(answers);
+          startQuestions();
+        }
+      );
+    });
+}
 // add an employee
 function addEmployee() {
   inquirer
@@ -194,30 +225,6 @@ function addEmployee() {
       );
     });
 }
-//   ]).then ((inputs) => {
-//     console.log("added employee", inputs)
-//     db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ?", [inputs.first_name, inputs.last_name, inputs.role_id, inputs.manager_id])
-//   }).then ((result) =>{
-//     console.log(result)
-//   }).catch ((err) => console.error(err))
-// }
-
-//add to empty array
-// const query = "SELECT first_name FROM employee";
-// connection.query(query, (err, res) => {
-//   if (err) throw err;
-//   res.forEach(({ first_name }) => {
-//     newEmployee.push(first_name);
-//   });
-// });
-// newEmployeeRole = [];
-// const query2 = `SELECT title FROM role`;
-// connection.query(query2, (err, res) => {
-//   if (err) throw err;
-//   res.forEach(({ title }) => {
-//     roleArray.push(title);
-//   });
-// });
 
 const updateEmployee = () => {
   inquirer
@@ -257,48 +264,11 @@ const updateEmployee = () => {
     });
 };
 // All functions to use for manipulating MySQL database
-const viewRoleList = () => {
-  const result = inquirer.prompt(addRole);
-  const sql = `INSERT INTO role (title, salary, department_id)
-    VALUES (?,?,?)`;
-  const params = [result.title, result.salary, result.department];
-
-  db.query(sql, params, function (err, results) {
-    console.log("");
-    console.table(results);
-  });
-};
-
-const viewDepartmentList = async () => {
-  const sql = `INSERT INTO department (name)
-    VALUES (?)`;
-  const params = [result.name];
-
-  db.query(sql, params, function (err, results) {
-    console.log("");
-    console.table(results);
-  });
-};
-
-// const viewEmployee = (firstName) => {
-//   const sql = `SELECT FROM employee WHERE employee.first_name = ?`;
-// const params = [
-//   result.first_name,
-//   result.last_name,
-//   result.role_id,
-//   result.manager_id,
-// ];
-// return connection
-//   .promise()
-//   .query(sql, firstName)
-//   .then((result) => console.table(result))
-//   .catch((err) => console.error(err));
-// connection.query(query, (err, res) =>{
-//   if (err) throw err
-//   console.log("view all employees")
-//   console.table(res)
-//   startQuestions();
-// })
+// const viewRoleList = () => {
+//   const result = inquirer.prompt(addRole);
+//   const sql = `INSERT INTO role (title, salary, department_id)
+//     VALUES (?,?,?)`;
+//   const params = [result.title, result.salary, result.department];
 
 //   db.query(sql, params, function (err, results) {
 //     console.log("");
@@ -306,61 +276,17 @@ const viewDepartmentList = async () => {
 //   });
 // };
 
-const allEmployees = () => {
-  const sql = `SELECT * FROM employees
-  `;
-  db.query(sql, (err, res) => {
-    if (err) throw err;
-    console.log("View all employees");
-    console.table(res);
-    res.forEach((employee) => {
-      employees.push(employee.first_name);
-    });
-    startQuestions();
-  });
-};
+// const viewDepartmentList = async () => {
+//   const sql = `INSERT INTO department (name)
+//     VALUES (?)`;
+//   const params = [result.name];
 
-//   return connection
-//     .promise()
-//     .query(sql)
-//     .then((result) => console.table(result))
-//     .catch((err) => console.error(err));
+//   db.query(sql, params, function (err, results) {
+//     console.log("");
+//     console.table(results);
+//   });
 // };
 
-const allDepartments = () => {
-  const query = `SELECT *
-   FROM departments`;
-  db.query(query, (err, res) => {
-    if (err) throw err;
-    console.log("View all departments");
-    console.table(res);
-    startQuestions();
-  });
-};
-// ///
-// const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id;`;
-//   db.query(query, (err, res) =>{
-//     if (err) throw err
-//     console.log("View all roles")
-//     console.table(res)
-//     startQuestions()
-//   })
-//   startQuestions();
-// };
-/////
-//  function to view all roles
-const allRoles = () => {
-  const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id;`;
-  db.query(query, (err, res) => {
-    if (err) throw err;
-    console.log("View all roles");
-    console.table(res);
-    res.forEach((role) => {
-      employeeRoles.push(role.title);
-    });
-    startQuestions();
-  });
-};
 const run = () => {
   startQuestions();
 };
