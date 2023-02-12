@@ -2,18 +2,18 @@ const fs = require("fs");
 const db = require("./db/connection");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const newEmployee = [];
-const newEmployeeRole = [];
+const employees = [];
+const employeeRoles = [];
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: "localhost",
   port: 3306,
-  user: 'root',
-  password: '123741q',
-  database: 'employee_tracker'
+  user: "root",
+  password: "123741q",
+  database: "employee_tracker",
 });
 
 const startQuestions = () => {
- inquirer
+  inquirer
     .prompt([
       {
         type: "list",
@@ -38,7 +38,7 @@ const startQuestions = () => {
           allDepartments();
           break;
 
-       case "view all roles":
+        case "view all roles":
           allRoles();
           break;
 
@@ -47,7 +47,7 @@ const startQuestions = () => {
           break;
 
         case "add a department":
-          addDepartment()
+          addDepartment();
           break;
 
         case "add a role":
@@ -58,7 +58,7 @@ const startQuestions = () => {
           addEmployee();
           break;
 
-       case "update an employee role":
+        case "update an employee role":
           updateEmployee();
           break;
         default:
@@ -88,13 +88,9 @@ function addRole() {
     ])
     .then((answers) => {
       connection.query(
-        `INSERT INTO roles title, salary, department
+        `INSERT INTO roles (title, salary, department_id)
         VALUES (?, ?, ?)`,
-        {
-          title: answers.role,
-          salary: answers.salary,
-          department: answers.department
-        },
+        [answers.title, answers.salary, answers.department],
         (err) => {
           if (err) throw err;
           console.log("added new role");
@@ -104,22 +100,22 @@ function addRole() {
       );
     });
 }
-// add a Department
-.then((answers) => {
-  connection.query(`INSERT INTO departments (name)
-  VALUES (?)`,
-{
-  name: answers
-    },
-    (err) => {
-      if (err) throw err;
-      console.log("added new department");
-      console.table(answers);
-      startQuestions();
-    }
-  );
-});
-}
+// }
+//   .then((answers) => {
+//   connection.query(`INSERT INTO departments (name)
+//   VALUES (?)`,
+// {
+//   name: answers
+//     },
+//     (err) => {
+//       if (err) throw err;
+//       console.log("added new department");
+//       console.table(answers);
+//       startQuestions();
+//     }
+//   );
+// });
+
 /////
 function addDepartment() {
   inquirer
@@ -131,24 +127,19 @@ function addDepartment() {
       },
     ])
     .then((answers) => {
-      connection.query(`INSERT INTO departments (name)
+      connection.query(
+        `INSERT INTO departments (name)
       VALUES (?)`,
-    {
-      name: answers
-      // db.query(
-      //   `INSERT INTO department SET ?`,
-      //   {
-      //     message: answers.department,
-        },
+        answers.name,
         (err) => {
           if (err) throw err;
           console.log("added new department");
-          console.table(answers);
           startQuestions();
         }
       );
     });
 }
+
 ////
 // const sql = `SELECT * FROM employee`;
 // db.query(query, (err, res) =>{
@@ -228,36 +219,41 @@ function addEmployee() {
 //   });
 // });
 
-const updateEmployeeRoleList = () => {
+const updateEmployee = () => {
   inquirer
     .prompt([
       {
-        type: "input",
-        name: "employeeNew",
-        choices: newEmployee,
-        message: "who(lucky one) a new employee is?",
+        type: "list",
+        name: "firstName",
+        choices: employees,
+        message: "who an employee is?",
       },
       {
-        type: "input",
+        type: "list",
         name: "roleNew",
-        choices: newEmployeeRole,
+        choices: employeeRoles,
         message: "What role would you like for your employee?",
       },
     ])
     .then((answers) => {
-      connection.query(
-        `UPDATE role SET title = ? WHERE first_name = ?`,
-        {
-          title: answers.roleNew,
-          first_name: answers.employeeNew,
-        },
-        (err) => {
-          if (err) throw err;
-          console.log("update an employee role");
-          console.table(answers);
-          startQuestions();
-        }
-      );
+      console.log(answers);
+      let roleId;
+      const roleSQL = `select id from roles where title = ?`;
+      connection.query(roleSQL, [answers.roleNew], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        roleId = res[0].id;
+        const updateEmployeeSQL = `update employees set role_id = ? where first_name =?`;
+        connection.query(
+          updateEmployeeSQL,
+          [roleId, answers.firstName],
+          (err) => {
+            if (err) throw err;
+            console.log("update an employee role");
+            startQuestions();
+          }
+        );
+      });
     });
 };
 // All functions to use for manipulating MySQL database
@@ -286,39 +282,42 @@ const viewDepartmentList = async () => {
 
 // const viewEmployee = (firstName) => {
 //   const sql = `SELECT FROM employee WHERE employee.first_name = ?`;
-  // const params = [
-  //   result.first_name,
-  //   result.last_name,
-  //   result.role_id,
-  //   result.manager_id,
-  // ];
-  // return connection
-  //   .promise()
-  //   .query(sql, firstName)
-  //   .then((result) => console.table(result))
-  //   .catch((err) => console.error(err));
-  // connection.query(query, (err, res) =>{
-  //   if (err) throw err
-  //   console.log("view all employees")
-  //   console.table(res)
-  //   startQuestions();
-  // })
+// const params = [
+//   result.first_name,
+//   result.last_name,
+//   result.role_id,
+//   result.manager_id,
+// ];
+// return connection
+//   .promise()
+//   .query(sql, firstName)
+//   .then((result) => console.table(result))
+//   .catch((err) => console.error(err));
+// connection.query(query, (err, res) =>{
+//   if (err) throw err
+//   console.log("view all employees")
+//   console.table(res)
+//   startQuestions();
+// })
 
-  //   db.query(sql, params, function (err, results) {
-  //     console.log("");
-  //     console.table(results);
-  //   });
+//   db.query(sql, params, function (err, results) {
+//     console.log("");
+//     console.table(results);
+//   });
 // };
 
 const allEmployees = () => {
-  const sql = `SELECT * FROM employee`;
-  db.query(query, (err, res) =>{
-    if (err) throw err
-    console.log("View all employees")
-    console.table(res)
+  const sql = `SELECT * FROM employees
+  `;
+  db.query(sql, (err, res) => {
+    if (err) throw err;
+    console.log("View all employees");
+    console.table(res);
+    res.forEach((employee) => {
+      employees.push(employee.first_name);
+    });
     startQuestions();
-  })
-  startQuestions()
+  });
 };
 
 //   return connection
@@ -329,14 +328,14 @@ const allEmployees = () => {
 // };
 
 const allDepartments = () => {
-  const query = `SELECT name FROM departments`;
-  db.query(query, (err, res) =>{
-    if (err) throw err
-    console.log("View all departments")
-    console.table(res)
+  const query = `SELECT *
+   FROM departments`;
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.log("View all departments");
+    console.table(res);
     startQuestions();
-  })
-  startQuestions()
+  });
 };
 // ///
 // const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id;`;
@@ -352,13 +351,15 @@ const allDepartments = () => {
 //  function to view all roles
 const allRoles = () => {
   const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id;`;
-  db.query(query, (err, res) =>{
-    if (err) throw err
-    console.log("View all roles")
-    console.table(res)
-    startQuestions()
-  })
-  startQuestions();
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.log("View all roles");
+    console.table(res);
+    res.forEach((role) => {
+      employeeRoles.push(role.title);
+    });
+    startQuestions();
+  });
 };
 const run = () => {
   startQuestions();
@@ -371,4 +372,3 @@ const initialDb = () => {
 };
 initialDb();
 run();
-
