@@ -95,8 +95,7 @@ const allRoles = () => {
  
 //  view all employees
 const allEmployees = () => {
-  const sql = `SELECT * FROM employees
-  `;
+  const sql = `SELECT * FROM employees`
   db.query(sql, (err, res) => {
     if (err) throw err;
     console.log("View all employees");
@@ -107,22 +106,6 @@ const allEmployees = () => {
     startQuestions();
   });
 };
-// 
-// function view all employees
-// const allEmployees = () =>{
-//   const query = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, departments.name, roles.salary, CONCAT(manager.first_name,'', manager.last_name) AS manager
-//   FROM employee 
-//   LEFT JOIN employee manager ON manager.id = employee.manager_id
-//   INNER JOIN roles ON employee.role_id = roles.id
-//   INNER JOIN departments ON departments.id = roles.department_id;`
-//   console.log(query)
-//   connection.query(query, (err, res) =>{
-//     if (err) throw err
-//     console.log("View all employees")
-//     console.table(res)
-//     startQuestions();
-//   }
-// )};
 
 // add a department
 function addDepartment() {
