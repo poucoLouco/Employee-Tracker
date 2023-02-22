@@ -193,9 +193,9 @@ function addEmployee() {
       const params = [answer.fistName, answer.lastName]
   
       // grab roles from roles table
-      const roleSql = `SELECT role.id, role.title FROM role`;
+      const roleSql = `SELECT role.id, role.title FROM roles`;
     
-      connection.promise().query(roleSql, (err, data) => {
+      connection.query(roleSql, (err, data) => {
         if (err) throw err; 
         
         const roles = data.map(({ id, title }) => ({ name: title, value: id }));
