@@ -4,8 +4,6 @@ command-line application to manage a company's employee database.Allow non-devel
 
 
 
-    ![alt text](assets/images/screenshot.png)
-    ```
 
 
 ## Built With
