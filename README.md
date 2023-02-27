@@ -5,7 +5,7 @@ command-line application to manage a company's employee database.Allow non-devel
 
 # Walkthrough Video 🎥 
 
-
+https://watch.screencastify.com/v/OSTUyDChOuo9LVX5fPOJ
 
 # Acceptance Criteria 🔍
 
