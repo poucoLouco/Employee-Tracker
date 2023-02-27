@@ -147,7 +147,7 @@ function addRole() {
       {
         type: "input",
         name: "department",
-        message: "Which department does the role belong to? ",
+        message: "Which department does the role belong to? please select id from all departments.",
       },
     ])
     .then((answers) => {
@@ -178,22 +178,22 @@ function addEmployee() {
         name: "last_name",
         message: "What is the employee's last name?",
       },
-      {
-        type: "input",
-        name: "role_id",
-        message: "What is the employee's role?",
-      },
-      {
-        type: "input",
-        name: "manager_id",
-        message: "Who is the employee's manager?",
-      },
+      // {
+      //   type: "input",
+      //   name: "role_id",
+      //   message: "What is the employee's role?",
+      // },
+      // {
+      //   type: "input",
+      //   name: "manager_id",
+      //   message: "Who is the employee's manager?",
+      // },
     ])
     .then(answer => {
       const params = [answer.fistName, answer.lastName]
   
       // grab roles from roles table
-      const roleSql = `SELECT role.id, role.title FROM roles`;
+      const roleSql = `SELECT roles.id, roles.title FROM roles`;
     
       connection.query(roleSql, (err, data) => {
         if (err) throw err; 
@@ -239,8 +239,8 @@ function addEmployee() {
                       connection.query(sql, params, (err, result) => {
                       if (err) throw err;
                       console.log("Employee has been added!")
-  
-                      showEmployees();
+                      startQuestions();
+                      // showEmployees();
                 });
               });
             });
