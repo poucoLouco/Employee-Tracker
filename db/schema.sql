@@ -18,6 +18,8 @@ CREATE TABLE employees (
   first_name varchar(30),
   last_name varchar(30),
   role_id Int NOT NULL,
-  manager_id INT NOT NULL,
-  FOREIGN KEY (role_id) REFERENCES roles(id)
+  manager_id INT,
+  FOREIGN KEY (role_id) REFERENCES roles(id),
+  FOREIGN KEY (manager_id) REFERENCES employees(id)
+  
 );

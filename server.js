@@ -81,7 +81,7 @@ const allDepartments = () => {
 
 //  function to view all roles
 const allRoles = () => {
-  const query = `SELECT title, salary, name FROM roles, departments where department_id = departments.id`;
+  const query = `SELECT roles.id, title, salary, name FROM roles, departments where department_id = departments.id`;
   db.query(query, (err, res) => {
     if (err) throw err;
     
@@ -94,13 +94,16 @@ const allRoles = () => {
 };
 //  view all employees
 const allEmployees = () => {
-  const sql = `SELECT * FROM employees`
+  const sql = `SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, 
+  departments.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employees INNER JOIN
+  roles on roles.id = employees.role_id INNER JOIN departments 
+  on departments.id = roles.department_id left join employees e on employees.manager_id = e.id;`
   db.query(sql, (err, res) => {
     if (err) throw err;
     console.log("View all employees");
     console.table(res);
     res.forEach((employee) => {
-      employees.push(employee.first_name);
+      employees.push(employee.first_name)
     });
     startQuestions();
   });

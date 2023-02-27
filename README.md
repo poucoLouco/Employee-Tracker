@@ -11,20 +11,43 @@ https://watch.screencastify.com/v/OSTUyDChOuo9LVX5fPOJ
 
 WHEN I start the application
 THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+
+![alt text](assets/images/1.png)
+
 WHEN I choose to view all departments
 THEN I am presented with a formatted table showing department names and department ids
+
+![alt text](assets/images/2.png)
+
 WHEN I choose to view all roles
 THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+
+![alt text](assets/images/3.png)
+
 WHEN I choose to view all employees
 THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+
+![alt text](assets/images/4.png)
+
 WHEN I choose to add a department
 THEN I am prompted to enter the name of the department and that department is added to the database
+
+![alt text](assets/images/5.png)
+
 WHEN I choose to add a role
 THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+
+![alt text](assets/images/6.png)
+
 WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+
+![alt text](assets/images/6.png)
+
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
+
 
 # Built With ⚙️
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
