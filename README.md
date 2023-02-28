@@ -5,7 +5,7 @@ command-line application to manage a company's employee database.Allow non-devel
 
 # Walkthrough Video 🎥 
 
-https://watch.screencastify.com/v/OSTUyDChOuo9LVX5fPOJ
+https://watch.screencastify.com/v/TSiOfGskGCTyHV4iP8hr
 
 # Acceptance Criteria 🔍
 
@@ -42,12 +42,12 @@ THEN I am prompted to enter the name, salary, and department for the role and th
 WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 
-![alt text](assets/images/6.png)
+![alt text](assets/images/7.png)
 
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
-
+![alt text](assets/images/8.png)
 
 # Built With ⚙️
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)

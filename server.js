@@ -193,7 +193,7 @@ function addEmployee() {
       // },
     ])
     .then(answer => {
-      const params = [answer.fistName, answer.lastName]
+      const params = [answer.first_name, answer.last_name]
   
       // grab roles from roles table
       const roleSql = `SELECT roles.id, roles.title FROM roles`;
